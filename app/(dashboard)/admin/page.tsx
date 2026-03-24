@@ -131,8 +131,8 @@ export default async function AdminPage() {
               href={`/admin/area/${user.id}`}
               className="block rounded-xl p-4 transition-all duration-200 hover:scale-[1.005]"
               style={{
-                background: 'rgba(22, 19, 42, 0.8)',
-                border: '1px solid rgba(30, 26, 56, 0.8)',
+                background: 'var(--bg2)',
+                border: '1px solid var(--border)',
               }}
             >
               <div className="flex items-start gap-4 flex-wrap">
@@ -166,7 +166,7 @@ export default async function AdminPage() {
                   ) : (
                     <span
                       className="text-xs px-2 py-1 rounded-full"
-                      style={{ background: 'rgba(186, 117, 23, 0.12)', color: '#EF9F27' }}
+                      style={{ background: 'rgba(186, 117, 23, 0.12)', color: 'var(--amber-mid)' }}
                     >
                       Pendiente
                     </span>
@@ -199,9 +199,9 @@ function StatusPill({
     <span
       className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
       style={{
-        background: done ? 'rgba(15, 110, 86, 0.12)' : 'rgba(30, 26, 56, 0.6)',
-        border: done ? '1px solid rgba(93, 202, 165, 0.2)' : '1px solid rgba(30, 26, 56, 0.8)',
-        color: done ? '#5DCAA5' : '#5E5A99',
+        background: done ? 'rgba(15, 110, 86, 0.1)' : 'var(--bg3)',
+        border: done ? '1px solid rgba(93, 202, 165, 0.2)' : '1px solid var(--border)',
+        color: done ? 'var(--teal-mid)' : 'var(--text-tertiary)',
       }}
     >
       {done ? (
