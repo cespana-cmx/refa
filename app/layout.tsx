@@ -8,19 +8,27 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Refácil | Diagnóstico de Madurez IA',
   description: 'Evalúa el nivel de preparación de tu área para adoptar inteligencia artificial',
-  icons: {
-    icon: '/favicon.ico',
-  },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+// Prevent flash of wrong theme before hydration
+const themeScript = `
+(function() {
+  try {
+    var stored = localStorage.getItem('theme');
+    if (stored === 'light' || stored === 'dark') {
+      document.documentElement.setAttribute('data-theme', stored);
+    }
+  } catch(e) {}
+})();
+`
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es" className="dark">
-      <body className={`${inter.className} bg-bg1 text-text-primary min-h-screen`}>
+    <html lang="es">
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body className={inter.className} style={{ backgroundColor: 'var(--bg1)', color: 'var(--text-primary)', minHeight: '100vh' }}>
         <Providers>{children}</Providers>
       </body>
     </html>

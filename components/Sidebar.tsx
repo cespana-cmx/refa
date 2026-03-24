@@ -3,6 +3,7 @@
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
+import ThemeToggle from './ThemeToggle'
 
 interface NavItem {
   href: string
@@ -86,9 +87,8 @@ export default function Sidebar() {
     <aside
       className="fixed left-0 top-0 h-full w-64 flex flex-col z-40"
       style={{
-        background: 'rgba(22, 19, 42, 0.95)',
-        borderRight: '1px solid rgba(83, 74, 183, 0.15)',
-        backdropFilter: 'blur(20px)',
+        background: 'var(--bg2)',
+        borderRight: '1px solid var(--border)',
       }}
     >
       {/* Logo */}
@@ -189,6 +189,8 @@ export default function Sidebar() {
             </p>
           </div>
         </div>
+
+        <ThemeToggle />
 
         <button
           onClick={() => signOut({ callbackUrl: '/login' })}
