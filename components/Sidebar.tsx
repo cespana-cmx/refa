@@ -112,9 +112,9 @@ export default function Sidebar() {
           </svg>
         </div>
         <div>
-          <span className="font-bold text-lg" style={{ color: '#AFA9EC' }}>Ref</span>
-          <span className="font-bold text-lg text-white">ácil</span>
-          <p className="text-xs" style={{ color: '#9994CC' }}>Diagnóstico IA</p>
+          <span className="font-bold text-lg" style={{ color: 'var(--purple-mid)' }}>Ref</span>
+          <span className="font-bold text-lg" style={{ color: 'var(--text-primary)' }}>ácil</span>
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Diagnóstico IA</p>
         </div>
       </div>
 
