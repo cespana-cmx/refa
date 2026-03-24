@@ -8,43 +8,42 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg1: '#0E0C1E',
-        bg2: '#16132A',
-        bg3: '#1E1A38',
+        // All colors use CSS variables so they respond to theme changes
+        bg1: 'var(--bg1)',
+        bg2: 'var(--bg2)',
+        bg3: 'var(--bg3)',
+        border: 'var(--border)',
         purple: {
-          DEFAULT: '#534AB7',
-          mid: '#AFA9EC',
-          light: '#EEEDFE',
-          dark: '#3D3589',
-          hover: '#6B62CC',
+          DEFAULT: 'var(--purple)',
+          mid: 'var(--purple-mid)',
+          light: 'var(--purple-light)',
+          dark: 'var(--purple-dark)',
+          hover: 'var(--purple)',
         },
         teal: {
-          DEFAULT: '#0F6E56',
-          mid: '#5DCAA5',
+          DEFAULT: 'var(--teal)',
+          mid: 'var(--teal-mid)',
         },
         amber: {
-          DEFAULT: '#BA7517',
-          mid: '#EF9F27',
+          DEFAULT: 'var(--amber)',
+          mid: 'var(--amber-mid)',
         },
         text: {
-          primary: '#E8E6FF',
-          secondary: '#9994CC',
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary: 'var(--text-tertiary)',
         },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'purple-glow': 'radial-gradient(circle at 50% 0%, rgba(83, 74, 183, 0.15), transparent 70%)',
-      },
       boxShadow: {
-        'purple-glow': '0 0 20px rgba(83, 74, 183, 0.3)',
-        'card': '0 4px 24px rgba(0, 0, 0, 0.4)',
+        'card': 'var(--shadow-card)',
+        'purple-glow': 'var(--shadow-glow)',
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-up': 'slideUp 0.4s ease-out',
+        'fade-in': 'fadeIn 0.25s ease-in-out',
+        'slide-up': 'slideUp 0.3s ease-out',
       },
       keyframes: {
         fadeIn: {
@@ -52,7 +51,7 @@ module.exports = {
           '100%': { opacity: '1' },
         },
         slideUp: {
-          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
       },
