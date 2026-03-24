@@ -97,7 +97,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
 
         {/* Assessment del líder */}
-        <div className="rounded-xl p-5" style={{ background: 'rgba(22, 19, 42, 0.8)', border: '1px solid rgba(30, 26, 56, 0.8)' }}>
+        <div className="rounded-xl p-5" style={{ background: 'var(--bg2)', border: '1px solid var(--border)' }}>
           <div className="flex items-center justify-between mb-4">
             <div className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
               📋 Assessment del líder
@@ -131,7 +131,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
                             {score.toFixed(1)}
                           </span>
                         </div>
-                        <div className="h-1.5 rounded-full" style={{ background: 'rgba(30, 26, 56, 0.8)' }}>
+                        <div className="h-1.5 rounded-full" style={{ background: 'var(--bg3)' }}>
                           <div
                             className="h-full rounded-full transition-all"
                             style={{ width: `${(score / 5) * 100}%`, background: CATEGORY_COLORS[idx] }}
@@ -154,7 +154,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
         {/* Diagnóstico del líder (Christian) */}
         <div
           className="rounded-xl p-5"
-          style={{ background: diagnostic ? profile.bg : 'rgba(22, 19, 42, 0.8)', border: `1px solid ${diagnostic ? profile.color + '30' : 'rgba(30, 26, 56, 0.8)'}` }}
+          style={{ background: diagnostic ? profile.bg : 'var(--bg2)', border: `1px solid ${diagnostic ? profile.color + '30' : 'var(--border)'}` }}
         >
           <div className="flex items-center justify-between mb-4">
             <div className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
@@ -179,13 +179,13 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
 
               <div className="grid grid-cols-2 gap-2 mb-3">
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(15, 110, 86, 0.12)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#5DCAA5' }}>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--teal-mid)' }}>
                     {(diagnostic.positiveSignals as string[]).length}
                   </div>
                   <div className="text-xs text-text-secondary">Señales positivas</div>
                 </div>
                 <div className="rounded-lg p-3 text-center" style={{ background: 'rgba(186, 117, 23, 0.1)' }}>
-                  <div className="text-2xl font-bold" style={{ color: '#EF9F27' }}>
+                  <div className="text-2xl font-bold" style={{ color: 'var(--amber-mid)' }}>
                     {(diagnostic.negativeSignals as string[]).length}
                   </div>
                   <div className="text-xs text-text-secondary">Señales de alerta</div>
@@ -195,7 +195,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
               {diagnostic.note && (
                 <div
                   className="rounded-lg p-3 text-xs text-text-secondary italic"
-                  style={{ background: 'rgba(14, 12, 30, 0.5)', border: '1px solid rgba(83, 74, 183, 0.1)' }}
+                  style={{ background: 'var(--bg3)', border: '1px solid var(--border)' }}
                 >
                   "{diagnostic.note}"
                 </div>
@@ -214,7 +214,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
       </div>
 
       {/* Team evaluation */}
-      <div className="rounded-xl p-5 mb-5" style={{ background: 'rgba(22, 19, 42, 0.8)', border: '1px solid rgba(30, 26, 56, 0.8)' }}>
+      <div className="rounded-xl p-5 mb-5" style={{ background: 'var(--bg2)', border: '1px solid var(--border)' }}>
         <div className="flex items-center justify-between mb-4">
           <div className="text-xs font-semibold uppercase tracking-widest text-text-secondary">
             👥 Evaluación del equipo · {teamMembers.length} integrantes
@@ -269,7 +269,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
                 className="rounded-xl p-4 mb-4"
                 style={{ background: 'rgba(83, 74, 183, 0.1)', border: '1px solid rgba(83, 74, 183, 0.25)' }}
               >
-                <div className="text-xs font-semibold mb-3" style={{ color: '#AFA9EC' }}>
+                <div className="text-xs font-semibold mb-3" style={{ color: 'var(--purple-mid)' }}>
                   🌟 AI Champions identificados
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -283,7 +283,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
                       }}
                     >
                       <span className="font-semibold text-text-primary">{c.name}</span>
-                      <span className="text-xs font-mono" style={{ color: '#AFA9EC' }}>{c.total.toFixed(1)}</span>
+                      <span className="text-xs font-mono" style={{ color: 'var(--purple-mid)' }}>{c.total.toFixed(1)}</span>
                     </div>
                   ))}
                 </div>
@@ -295,7 +295,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
               {teamMembers.map((member) => {
                 const ev = member.evaluation
                 if (!ev) return (
-                  <div key={member.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: 'rgba(14, 12, 30, 0.4)' }}>
+                  <div key={member.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: 'var(--bg3)' }}>
                     <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold" style={{ background: 'rgba(83, 74, 183, 0.2)', color: '#9994CC' }}>
                       {member.name[0]}
                     </div>
@@ -307,7 +307,7 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
                 const qInfo = QUADRANT_LABELS[q]
                 const avg = ((ev.apertura + ev.curiosidad + ev.influencia + ev.carga) / 4).toFixed(1)
                 return (
-                  <div key={member.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: 'rgba(14, 12, 30, 0.4)' }}>
+                  <div key={member.id} className="flex items-center gap-3 px-3 py-2 rounded-lg" style={{ background: 'var(--bg3)' }}>
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
                       style={{ background: 'linear-gradient(135deg, #534AB7, #7B74D6)', color: '#fff' }}
