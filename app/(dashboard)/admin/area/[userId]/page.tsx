@@ -39,7 +39,15 @@ export default async function AreaDetailPage({ params }: { params: { userId: str
   const profileType = diagnostic?.profileType ?? 'sin-evaluar'
   const profile = PROFILE_LABELS[profileType] ?? PROFILE_LABELS['sin-evaluar']
   const maturity = assessment?.score ? getMaturityInfo(assessment.score) : null
-  const categoryScores = assessment?.categoryScores as Record<string, number> | null
+
+  // categoryScores is stored as array of {categoryName, score, ...}
+  type CatScore = { categoryName: string; score: number }
+  const categoryScoresRaw = assessment?.categoryScores as CatScore[] | Record<string, number> | null
+  const categoryScores: Record<string, number> | null = categoryScoresRaw
+    ? Array.isArray(categoryScoresRaw)
+      ? Object.fromEntries(categoryScoresRaw.map((c) => [c.categoryName, c.score]))
+      : categoryScoresRaw
+    : null
 
   // Team champion analysis
   const evaluatedMembers = teamMembers.filter((m) => m.evaluation)
