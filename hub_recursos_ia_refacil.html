@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hub de Recursos · IA Refácil</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0E0C1E;--bg2:#16132A;--bg3:#1E1A38;
+  --border:rgba(175,169,236,.14);--border2:rgba(175,169,236,.28);
+  --purple:#534AB7;--purple-mid:#AFA9EC;--purple-light:#EEEDFE;--purple-dark:#26215C;
+  --teal:#0F6E56;--teal-mid:#5DCAA5;--teal-light:#E1F5EE;
+  --amber:#BA7517;--amber-mid:#EF9F27;--amber-light:#FAEEDA;
+  --text:#E8E6FF;--text2:#9994CC;--text3:#5E5A99;
+  --white:#fff;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
+body::before{content:'';position:fixed;top:-300px;right:-200px;width:700px;height:700px;
+  background:radial-gradient(circle,rgba(83,74,183,.18) 0%,transparent 70%);
+  pointer-events:none;z-index:0}
+body::after{content:'';position:fixed;bottom:-200px;left:-150px;width:500px;height:500px;
+  background:radial-gradient(circle,rgba(15,110,86,.14) 0%,transparent 70%);
+  pointer-events:none;z-index:0}
+
+.app{max-width:860px;margin:0 auto;padding:40px 24px 80px;position:relative;z-index:1}
+
+/* HEADER */
+.header{text-align:center;margin-bottom:52px}
+.logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:24px}
+.logo-chip{width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--purple),#7B74D6);
+  display:flex;align-items:center;justify-content:center;
+  font-size:19px;font-weight:700;color:#fff}
+.logo-name{font-size:22px;font-weight:700;color:var(--white)}
+.header h1{font-size:clamp(28px,4vw,42px);font-weight:700;
+  color:var(--white);letter-spacing:-1px;line-height:1.2;margin-bottom:14px}
+.header h1 span{color:var(--purple-mid)}
+.header p{font-size:15px;color:var(--text2);max-width:520px;
+  margin:0 auto;line-height:1.65}
+.header-divider{width:60px;height:3px;background:linear-gradient(90deg,var(--purple),var(--teal-mid));
+  border-radius:2px;margin:24px auto 0}
+
+/* SECCIONES */
+.section{margin-bottom:44px}
+.section-label{display:flex;align-items:center;gap:10px;margin-bottom:18px}
+.section-num{width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.section-num.purple{background:var(--purple)}
+.section-num.teal{background:var(--teal)}
+.section-num.amber{background:var(--amber)}
+.section-title{font-size:13px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text3)}
+.section-top-line{flex:1;height:1px;background:var(--border)}
+
+/* TARJETAS */
+.cards{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:14px;padding:20px 22px;
+  display:flex;align-items:center;gap:18px;
+  text-decoration:none;color:inherit;
+  transition:border-color .2s,background .2s,transform .15s;
+  cursor:pointer}
+.card:hover{border-color:var(--border2);background:var(--bg3);transform:translateY(-1px)}
+.card.primary:hover{border-color:rgba(83,74,183,.5)}
+.card.teal-hover:hover{border-color:rgba(93,202,165,.4)}
+.card.amber-hover:hover{border-color:rgba(239,159,39,.4)}
+
+.card-icon{width:46px;height:46px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0}
+.icon-purple{background:rgba(83,74,183,.18)}
+.icon-teal{background:rgba(15,110,86,.16)}
+.icon-amber{background:rgba(186,117,23,.16)}
+
+.card-body{flex:1;min-width:0}
+.card-title{font-size:15px;font-weight:600;color:var(--white);margin-bottom:4px}
+.card-desc{font-size:12.5px;color:var(--text2);line-height:1.5}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0}
+.card-badge{font-size:10px;font-weight:600;padding:3px 9px;
+  border-radius:8px;white-space:nowrap}
+.badge-html{background:rgba(83,74,183,.2);color:var(--purple-mid)}
+.badge-pptx{background:rgba(186,117,23,.18);color:var(--amber-mid)}
+.badge-docx{background:rgba(15,110,86,.18);color:var(--teal-mid)}
+.card-arrow{font-size:16px;color:var(--text3)}
+.card:hover .card-arrow{color:var(--purple-mid)}
+
+/* NOTA VERSIÓN */
+.version-note{display:flex;align-items:center;gap:8px;
+  background:rgba(83,74,183,.08);border:1px solid var(--border);
+  border-radius:9px;padding:9px 14px;margin-top:8px}
+.version-note span{font-size:11.5px;color:var(--text3);line-height:1.4}
+.version-note strong{color:var(--purple-mid)}
+
+/* FOOTER */
+.footer{margin-top:52px;padding-top:28px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-info{font-size:12px;color:var(--text3);line-height:1.6}
+.footer-tag{display:inline-flex;align-items:center;gap:5px;
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:8px;padding:5px 11px;font-size:11px;color:var(--text3)}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-chip">re</div>
+      <div class="logo-name">refácil</div>
+    </div>
+    <h1>Hub de recursos<br><span>Proyecto IA — Sesiones de diagnóstico</span></h1>
+    <p>Todo lo que necesitas para las sesiones con los líderes de área, en un solo lugar.</p>
+    <div class="header-divider"></div>
+  </div>
+
+  <!-- SECCIÓN 1: HERRAMIENTAS INTERACTIVAS -->
+  <div class="section">
+    <div class="section-label">
+      <div class="section-num purple">1</div>
+      <div class="section-title">Herramientas interactivas — abrir en el navegador</div>
+      <div class="section-top-line"></div>
+    </div>
+
+    <div class="cards">
+
+      <!-- Demo IA Baudoin -->
+      <a class="card primary" href="demo_baudoin_refacil.html" target="_blank">
+        <div class="card-icon icon-purple">🤖</div>
+        <div class="card-body">
+          <div class="card-title">Demo interactiva de IA — Baudoin</div>
+          <div class="card-desc">Demo en vivo con IA real (Claude API) para la reunión con el CEO. 4 áreas precargadas: Soporte, Finanzas, Comercial y BI. Timer antes/después automático.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-html">HTML · IA real</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <!-- Herramienta de sesión completa v2 -->
+      <a class="card primary" href="sesion_diagnostico_completa_v2.html" target="_blank">
+        <div class="card-icon icon-purple">🎮</div>
+        <div class="card-body">
+          <div class="card-title">Herramienta de sesión completa — versión actual</div>
+          <div class="card-desc">4 fases en una sola pantalla: evaluación del equipo por el líder → evaluación del líder por Christian → competencia en dos equipos → resultados con mapa de Champions y plan de acción.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-html">HTML · Interactivo</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+      <!-- Evaluación AI Champions v2 -->
+      <a class="card teal-hover" href="evaluacion_ai_champions_v2.html" target="_blank">
+        <div class="card-icon icon-teal">🌟</div>
+        <div class="card-body">
+          <div class="card-title">Evaluación de equipo — AI Champions</div>
+          <div class="card-desc">El líder califica a su equipo en 4 dimensiones: apertura al cambio, curiosidad tecnológica, influencia e impacto repetitivo. Genera mapa de cuadrantes y ranking automático.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-html">HTML · El líder la llena</span>
+          <span class="card-arrow">↗</span>
+        </div>
+      </a>
+
+    </div>
+    <div class="version-note">
+      <span>💡 <strong>Para las sesiones usa siempre la Herramienta completa (fila del medio)</strong> — integra la evaluación del equipo, la evaluación del líder y la competencia en una sola pantalla.</span>
+    </div>
+  </div>
+
+  <!-- SECCIÓN 2: PRESENTACIONES -->
+  <div class="section">
+    <div class="section-label">
+      <div class="section-num amber">2</div>
+      <div class="section-title">Presentaciones — abrir en PowerPoint</div>
+      <div class="section-top-line"></div>
+    </div>
+
+    <div class="cards">
+
+      <!-- Presentación áreas v2 -->
+      <a class="card amber-hover" href="Sesion_Lideres_Refacil_v2.pptx" download>
+        <div class="card-icon icon-amber">📊</div>
+        <div class="card-body">
+          <div class="card-title">Presentación para líderes de área — versión actual</div>
+          <div class="card-desc">12 slides para el inicio de cada sesión. Abre con el elefante en la sala, respuesta honesta sobre el reemplazo, antes/después, las dos apuestas, cuéntanos tu operación y cierre con la pregunta que rompe la resistencia.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-pptx">PPTX · 12 slides</span>
+          <span class="card-arrow">↓</span>
+        </div>
+      </a>
+
+      <!-- Presentación Baudoin v2 estratégica -->
+      <a class="card amber-hover" href="Plan_IA_Baudoin_v2_Estrategico.pptx" download>
+        <div class="card-icon icon-amber">🎯</div>
+        <div class="card-body">
+          <div class="card-title">Presentación CEO Baudoin — apuestas estratégicas</div>
+          <div class="card-desc">11 slides para la reunión con el CEO. De reactivo a inteligente: activo de datos, las dos apuestas estratégicas (predictivo + flujos autónomos), ruta de 8 áreas, metas al mes 5 y rol del CEO.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-pptx">PPTX · 11 slides</span>
+          <span class="card-arrow">↓</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- SECCIÓN 3: GUIONES -->
+  <div class="section">
+    <div class="section-label">
+      <div class="section-num teal">3</div>
+      <div class="section-title">Guiones — abrir en Word</div>
+      <div class="section-top-line"></div>
+    </div>
+
+    <div class="cards">
+
+      <!-- Guión 8 áreas -->
+      <a class="card teal-hover" href="Guion_Sesiones_8_Areas_Refacil.docx" download>
+        <div class="card-icon icon-teal">📋</div>
+        <div class="card-body">
+          <div class="card-title">Guión de sesiones — las 8 áreas</div>
+          <div class="card-desc">Guión completo para cada área: contexto, flujo minuto a minuto con las 6 fases (Fase 0 con presentación incluida), callouts de lo que escuchas, objeciones con respuesta, co-creación final y cómo manejar la resistencia específica de cada área.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-docx">DOCX · 867 párrs.</span>
+          <span class="card-arrow">↓</span>
+        </div>
+      </a>
+
+      <!-- Guión Baudoin v2 -->
+      <a class="card teal-hover" href="Guion_Baudoin_v2_Estrategico.docx" download>
+        <div class="card-icon icon-teal">🤝</div>
+        <div class="card-body">
+          <div class="card-title">Guión reunión Baudoin — apuestas estratégicas</div>
+          <div class="card-desc">30 minutos minuto a minuto: apertura, demo antes del deck, 4 slides clave, 3 compromisos, 5 objeciones probables con respuesta exacta, regla del silencio y mensaje de anuncio listo para enviar.</div>
+        </div>
+        <div class="card-right">
+          <span class="card-badge badge-docx">DOCX · 30 min</span>
+          <span class="card-arrow">↓</span>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-info">
+      Christian España Silva · AI Lead · Super Pagos S.A.S. · Refácil<br>
+      Contrato FO-LG-25 · Marzo–Septiembre 2026 · Confidencial
+    </div>
+    <div class="footer-tag">🔒 Uso interno · No compartir</div>
+  </div>
+
+</div>
+</body>
+</html>

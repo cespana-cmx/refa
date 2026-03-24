@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sesión de Diagnóstico IA · Refácil</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --purple:#534AB7;--purple-dark:#26215C;--purple-deep:#0E0C1E;
+  --purple-mid:#AFA9EC;--purple-light:#EEEDFE;
+  --teal:#0F6E56;--teal-light:#E1F5EE;--teal-mid:#5DCAA5;
+  --amber:#BA7517;--amber-light:#FAEEDA;--amber-mid:#EF9F27;
+  --red:#A32D2D;--red-light:#FCEBEB;
+  --green:#1D9E75;--green-light:#EAF3DE;
+  --bg:#0E0C1E;--bg2:#16132A;--bg3:#1E1A38;
+  --border:rgba(175,169,236,.16);--border2:rgba(175,169,236,.32);
+  --text:#E8E6FF;--text2:#9994CC;--text3:#5E5A99;
+  --white:#FFFFFF;--font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --r:12px;--rl:18px;
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font)}
+body::before{content:'';position:fixed;top:-200px;right:-200px;width:600px;height:600px;
+  background:radial-gradient(circle,rgba(83,74,183,.2) 0%,transparent 70%);pointer-events:none;z-index:0}
+
+/* ── LAYOUT ── */
+.app{max-width:1020px;margin:0 auto;padding:24px 20px 80px;position:relative;z-index:1}
+
+/* ── HEADER ── */
+header{display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:32px;flex-wrap:wrap;gap:12px}
+.logo-wrap{display:flex;align-items:center;gap:10px}
+.logo-chip{width:36px;height:36px;border-radius:9px;
+  background:linear-gradient(135deg,var(--purple),#7B74D6);
+  display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff}
+.logo-text{font-size:17px;font-weight:600;color:var(--white)}
+.logo-sub{font-size:11px;color:var(--text3)}
+
+/* PHASE STEPPER */
+.stepper{display:flex;align-items:center;gap:0}
+.phase{display:flex;align-items:center;gap:8px;padding:8px 14px;
+  border-radius:20px;cursor:pointer;transition:all .2s;user-select:none}
+.phase-num{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.phase-label{font-size:12px;font-weight:500;white-space:nowrap}
+.phase.done .phase-num{background:var(--teal);color:#fff}
+.phase.done .phase-label{color:var(--teal-mid)}
+.phase.active .phase-num{background:var(--purple);color:#fff;box-shadow:0 0 0 3px rgba(83,74,183,.3)}
+.phase.active .phase-label{color:var(--white);font-weight:600}
+.phase.pending .phase-num{background:var(--bg3);color:var(--text3)}
+.phase.pending .phase-label{color:var(--text3)}
+.phase-arrow{color:var(--text3);font-size:12px;margin:0 2px}
+
+/* ── PAGES ── */
+.page{display:none;animation:fadeIn .3s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── COMMON ── */
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple-light);
+  color:var(--purple);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;margin-bottom:14px}
+.page-title{font-size:clamp(22px,3.5vw,34px);font-weight:700;color:var(--white);
+  letter-spacing:-.8px;margin-bottom:8px;line-height:1.2}
+.page-title span{color:var(--purple-mid)}
+.page-sub{font-size:14px;color:var(--text2);max-width:580px;line-height:1.6;margin-bottom:28px}
+label{display:block;font-size:11px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--text3);margin-bottom:7px}
+input[type=text],select{width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:var(--r);color:var(--text);font-family:var(--font);
+  font-size:14px;padding:10px 13px;outline:none;transition:border-color .2s}
+input[type=text]::placeholder{color:var(--text3)}
+input[type=text]:focus,select:focus{border-color:var(--purple-mid)}
+select option{background:var(--bg2)}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:22px}
+.card+.card{margin-top:14px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:580px){.row2{grid-template-columns:1fr}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:12px 24px;border-radius:var(--r);font-size:13px;font-weight:600;
+  cursor:pointer;transition:all .2s;font-family:var(--font);border:none}
+.btn-primary{background:var(--purple);color:#fff}
+.btn-primary:hover{background:#6560CC;transform:translateY(-1px)}
+.btn-secondary{background:var(--bg3);color:var(--text2);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--border2);color:var(--white)}
+.btn-group{display:flex;gap:10px;justify-content:flex-end;margin-top:22px;flex-wrap:wrap}
+.member-row{display:flex;gap:8px;align-items:center;margin-bottom:7px}
+.member-row input{flex:1}
+.rm-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);
+  background:none;color:var(--text3);cursor:pointer;font-size:15px;
+  display:flex;align-items:center;justify-content:center;transition:all .18s;flex-shrink:0}
+.rm-btn:hover{border-color:#F87171;color:#F87171}
+.add-btn{display:flex;align-items:center;gap:7px;background:none;
+  border:1px dashed var(--border);color:var(--text3);border-radius:var(--r);
+  padding:9px 14px;font-size:12px;cursor:pointer;transition:all .18s;
+  font-family:var(--font);width:100%;margin-top:4px}
+.add-btn:hover{border-color:var(--purple-mid);color:var(--purple-mid)}
+
+/* ── SLIDERS ── */
+.slider-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:600px){.slider-grid{grid-template-columns:1fr}}
+.slider-box{background:var(--bg3);border-radius:var(--r);padding:14px}
+.sl-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sl-label{font-size:11.5px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:6px}
+.sl-dot{width:7px;height:7px;border-radius:50%}
+.sl-val{font-size:18px;font-weight:700;font-family:var(--mono)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:5px;
+  border-radius:3px;background:var(--bg);outline:none;cursor:pointer}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;
+  width:18px;height:18px;border-radius:50%;cursor:pointer;
+  border:2px solid rgba(255,255,255,.2);transition:transform .15s}
+input[type=range]::-webkit-slider-thumb:active{transform:scale(1.25)}
+.sl-marks{display:flex;justify-content:space-between;font-size:9.5px;color:var(--text3);margin-top:5px}
+.person-header-row{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.avatar{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.p-name-input{flex:1;background:none;border:none;font-size:15px;font-weight:600;
+  color:var(--white);font-family:var(--font);outline:none;
+  border-bottom:1px solid transparent;transition:border-color .2s;padding-bottom:2px}
+.p-name-input:focus{border-bottom-color:var(--purple-mid)}
+.done-tag{font-size:10px;font-weight:600;background:rgba(93,202,165,.15);
+  color:var(--teal-mid);border-radius:7px;padding:3px 9px;display:none}
+.completed .done-tag{display:block}
+.total-row{display:flex;align-items:center;gap:12px;margin-top:14px;
+  padding-top:14px;border-top:1px solid var(--border)}
+.total-lbl{font-size:11px;color:var(--text2);font-weight:500;white-space:nowrap}
+.total-track{flex:1;height:6px;background:var(--bg);border-radius:3px}
+.total-fill{height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--purple),var(--teal-mid));transition:width .4s}
+.total-num{font-size:16px;font-weight:700;font-family:var(--mono);color:var(--white)}
+
+/* ── LEADER EVAL ── */
+.leader-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);
+  padding:22px;margin-bottom:14px}
+.signal-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--border)}
+.signal-row:last-child{border-bottom:none}
+.signal-check{width:20px;height:20px;border-radius:5px;border:1.5px solid var(--border2);
+  background:none;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px;transition:all .2s}
+.signal-check.checked{background:var(--teal);border-color:var(--teal)}
+.signal-check.checked::after{content:'✓';font-size:11px;color:#fff;font-weight:700}
+.signal-check.negative.checked{background:var(--amber);border-color:var(--amber)}
+.signal-body .signal-title{font-size:13px;font-weight:600;color:var(--white);margin-bottom:2px}
+.signal-body .signal-desc{font-size:11.5px;color:var(--text3);line-height:1.5}
+.signal-tag{font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:6px;
+  margin-left:8px;vertical-align:middle}
+.tag-pos{background:rgba(93,202,165,.15);color:var(--teal-mid)}
+.tag-neg{background:rgba(186,117,23,.15);color:var(--amber-mid)}
+
+/* ── COMPETENCIA ── */
+.competition-header{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;
+  align-items:center;margin-bottom:24px}
+.competitor-card{background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--rl);padding:18px;text-align:center}
+.competitor-card.champion{border-color:rgba(83,74,183,.5);background:rgba(83,74,183,.08)}
+.comp-avatar{width:52px;height:52px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;color:#fff;margin:0 auto 10px}
+.comp-name{font-size:15px;font-weight:700;color:var(--white);margin-bottom:3px}
+.comp-score-tag{font-size:11px;font-weight:600;padding:3px 10px;
+  border-radius:8px;background:var(--purple-light);color:var(--purple)}
+.vs-badge{font-size:28px;font-weight:900;color:var(--purple-mid);
+  text-align:center;font-family:var(--mono)}
+
+/* Categorías de competencia */
+.cat-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.cat-tab{padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;
+  cursor:pointer;transition:all .2s;border:1px solid var(--border);
+  background:var(--bg3);color:var(--text3)}
+.cat-tab.active{background:var(--purple);color:#fff;border-color:var(--purple)}
+.cat-tab:hover:not(.active){border-color:var(--border2);color:var(--text)}
+
+/* Columnas de competencia */
+.comp-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:640px){.comp-columns{grid-template-columns:1fr}}
+.comp-col{background:var(--bg2);border:1px solid var(--border);
+  border-radius:var(--rl);padding:18px}
+.comp-col-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  padding-bottom:12px;border-bottom:1px solid var(--border)}
+.comp-col-avatar{width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:#fff;flex-shrink:0}
+.comp-col-name{font-size:13px;font-weight:600;color:var(--white)}
+.comp-col-pts{font-size:20px;font-weight:700;font-family:var(--mono);
+  color:var(--purple-mid);margin-left:auto}
+.task-input-row{display:flex;gap:8px;margin-bottom:8px}
+.task-input-row input{flex:1;font-size:13px;padding:8px 12px}
+.add-task-btn{padding:8px 14px;background:var(--purple);color:#fff;
+  border:none;border-radius:var(--r);font-size:13px;font-weight:600;
+  cursor:pointer;transition:background .18s;font-family:var(--font);white-space:nowrap}
+.add-task-btn:hover{background:#6560CC}
+.task-list{display:flex;flex-direction:column;gap:6px;min-height:60px}
+.task-item{display:flex;align-items:flex-start;gap:8px;
+  background:var(--bg3);border-radius:9px;padding:9px 12px;
+  animation:slideIn .2s ease}
+@keyframes slideIn{from{opacity:0;transform:translateX(-6px)}to{opacity:1;transform:translateX(0)}}
+.task-item .task-text{flex:1;font-size:12.5px;color:var(--text);line-height:1.45}
+.task-rm{background:none;border:none;color:var(--text3);cursor:pointer;
+  font-size:14px;padding:0;flex-shrink:0;transition:color .18s;margin-top:1px}
+.task-rm:hover{color:#F87171}
+.task-pts{font-size:10px;font-weight:700;color:var(--purple-mid);
+  background:var(--purple-light);border-radius:6px;padding:2px 6px;
+  white-space:nowrap;flex-shrink:0}
+
+/* Scoreboard */
+.scoreboard{background:var(--bg3);border-radius:var(--r);
+  padding:14px 18px;display:flex;align-items:center;
+  justify-content:space-between;margin-bottom:20px;flex-wrap:wrap;gap:12px}
+.score-side{text-align:center;flex:1}
+.score-num{font-size:36px;font-weight:700;font-family:var(--mono);line-height:1}
+.score-name{font-size:11px;color:var(--text3);margin-top:3px}
+.score-vs{font-size:14px;font-weight:600;color:var(--text3);padding:0 12px}
+.leader-pts{font-size:13px;color:var(--text2);text-align:center;flex:1;
+  padding:8px;background:var(--bg2);border-radius:var(--r);border:1px solid var(--border)}
+.leader-pts strong{color:var(--white);display:block;font-size:20px;font-family:var(--mono)}
+
+/* ── RESULTADOS FINALES ── */
+.result-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+@media(max-width:640px){.result-grid{grid-template-columns:1fr}}
+.result-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--rl);padding:20px}
+.result-card.highlight{border-color:rgba(83,74,183,.4);background:rgba(83,74,183,.06)}
+.rc-title{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  color:var(--text3);margin-bottom:14px;display:flex;align-items:center;gap:7px}
+.champion-chip{display:flex;align-items:center;gap:10px;
+  background:var(--bg3);border-radius:var(--r);padding:10px 13px;margin-bottom:8px}
+.champ-avatar{width:34px;height:34px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0}
+.champ-info{flex:1}
+.champ-name{font-size:13px;font-weight:600;color:var(--white)}
+.champ-role{font-size:11px;color:var(--text3)}
+.champ-score{font-size:17px;font-weight:700;font-family:var(--mono);color:var(--purple-mid)}
+
+/* Quadrant mini */
+.mini-quad{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;
+  gap:8px;margin-top:4px}
+.mq{border-radius:9px;padding:10px 12px;min-height:72px}
+.mq-champion{background:rgba(83,74,183,.12);border:1px solid rgba(83,74,183,.25)}
+.mq-latent{background:rgba(15,110,86,.1);border:1px solid rgba(15,110,86,.2)}
+.mq-resistant{background:rgba(186,117,23,.08);border:1px solid rgba(186,117,23,.2)}
+.mq-neutral{background:var(--bg3);border:1px solid var(--border)}
+.mq-label{font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px}
+.mq-champion .mq-label{color:var(--purple-mid)}
+.mq-latent .mq-label{color:var(--teal-mid)}
+.mq-resistant .mq-label{color:var(--amber-mid)}
+.mq-neutral .mq-label{color:var(--text3)}
+.mq-names{font-size:11px;color:var(--text2);line-height:1.5}
+
+/* Leader profile */
+.leader-profile{background:var(--bg3);border-radius:var(--r);padding:14px;margin-bottom:10px}
+.lp-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.lp-row:last-child{margin-bottom:0}
+.lp-icon{font-size:16px;width:28px;text-align:center;flex-shrink:0}
+.lp-label{font-size:11.5px;color:var(--text2);flex:1;line-height:1.4}
+.lp-tag{font-size:10px;font-weight:600;padding:2px 9px;border-radius:7px;white-space:nowrap}
+.tag-green{background:rgba(29,158,117,.15);color:var(--teal-mid)}
+.tag-amber{background:rgba(186,117,23,.15);color:var(--amber-mid)}
+.tag-red{background:rgba(163,45,45,.15);color:#F87171}
+
+/* Quick wins summary */
+.qw-list{display:flex;flex-direction:column;gap:8px}
+.qw-item{background:var(--bg3);border-radius:var(--r);padding:11px 14px;
+  border-left:3px solid var(--purple);display:flex;align-items:flex-start;gap:10px}
+.qw-item.teal{border-left-color:var(--teal)}
+.qw-item.amber{border-left-color:var(--amber)}
+.qw-day{font-size:10px;font-weight:700;color:var(--purple-mid);
+  background:var(--purple-light);border-radius:6px;padding:2px 7px;
+  white-space:nowrap;flex-shrink:0;margin-top:2px}
+.qw-day.teal{color:var(--teal-mid);background:var(--teal-light)}
+.qw-day.amber{color:var(--amber);background:var(--amber-light)}
+.qw-text{font-size:12.5px;color:var(--text);line-height:1.5}
+
+/* Insight box */
+.insight-box{background:var(--purple-dark);border:1px solid rgba(175,169,236,.2);
+  border-radius:var(--rl);padding:20px;margin-top:14px}
+.insight-box h3{font-size:15px;font-weight:700;color:var(--white);margin-bottom:14px}
+.insight-items{display:flex;flex-direction:column;gap:10px}
+.ins{display:flex;gap:10px;padding:10px 13px;background:rgba(255,255,255,.04);
+  border-radius:var(--r);border-left:3px solid var(--purple)}
+.ins.teal{border-left-color:var(--teal)}
+.ins.amber{border-left-color:var(--amber)}
+.ins-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.ins-text{font-size:12.5px;color:var(--text2);line-height:1.55}
+.ins-text strong{color:var(--white)}
+
+/* ── NOTA CHRIS ── */
+.chris-note{display:flex;align-items:center;gap:8px;
+  background:rgba(83,74,183,.12);border:1px solid rgba(83,74,183,.25);
+  border-radius:var(--r);padding:10px 14px;margin-bottom:20px}
+.chris-note span{font-size:12px;color:var(--purple-mid);line-height:1.4}
+
+@media print{
+  body{background:#fff;color:#000}
+  header,.phase,.btn,.btn-group,.add-btn,.task-input-row,.chris-note{display:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER -->
+<header>
+  <div class="logo-wrap">
+    <div class="logo-chip">re</div>
+    <div>
+      <div class="logo-text">refácil · <span style="font-weight:400;color:var(--text2);font-size:14px">Sesión de diagnóstico IA</span></div>
+      <div class="logo-sub" id="headerSub">Configura el área para comenzar</div>
+    </div>
+  </div>
+  <div class="stepper">
+    <div class="phase active" id="ph1" onclick="safeGo(1)">
+      <div class="phase-num">1</div>
+      <div class="phase-label">Setup</div>
+    </div>
+    <div class="phase-arrow">›</div>
+    <div class="phase pending" id="ph2" onclick="safeGo(2)">
+      <div class="phase-num">2</div>
+      <div class="phase-label">Equipo</div>
+    </div>
+    <div class="phase-arrow">›</div>
+    <div class="phase pending" id="ph3" onclick="safeGo(3)">
+      <div class="phase-num">3</div>
+      <div class="phase-label">Competencia</div>
+    </div>
+    <div class="phase-arrow">›</div>
+    <div class="phase pending" id="ph4" onclick="safeGo(4)">
+      <div class="phase-num">4</div>
+      <div class="phase-label">Resultados</div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════
+     FASE 1 · SETUP
+════════════════════════════════════════════ -->
+<div class="page active" id="page1">
+  <div class="section-tag">📋 Inicio de sesión</div>
+  <h1 class="page-title">Configura el área<br><span>antes de empezar</span></h1>
+  <p class="page-sub">Completa estos datos y agrega al equipo. El líder calificará a cada persona al inicio — antes de arrancar con las preguntas.</p>
+
+  <div class="card">
+    <div class="row2" style="margin-bottom:18px">
+      <div><label>Área</label><input type="text" id="areaName" placeholder="Ej: Comercial y Alianzas"/></div>
+      <div><label>Líder del área</label><input type="text" id="leaderName" placeholder="Nombre completo"/></div>
+    </div>
+    <div>
+      <label>Integrantes del equipo</label>
+      <div id="memberInputs">
+        <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 1"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+        <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 2"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+        <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 3"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+        <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 4"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+        <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 5"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+      </div>
+      <button class="add-btn" onclick="addMember()">+ Agregar integrante</button>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div style="font-size:13px;font-weight:600;color:var(--white);margin-bottom:4px">El líder califica. Christian observa.</div>
+    <div style="font-size:12px;color:var(--text3);margin-bottom:14px">Fase 2 es del líder. Fase 3 y 4 son de Christian.</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px">
+      <div style="background:var(--bg3);border-radius:var(--r);padding:13px;border-left:3px solid var(--purple)">
+        <div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px">🔓 Apertura al cambio</div>
+        <div style="font-size:11px;color:var(--text3)">¿Cómo reacciona esta persona cuando implementas algo nuevo?</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:13px;border-left:3px solid var(--teal)">
+        <div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px">💡 Curiosidad tecnológica</div>
+        <div style="font-size:11px;color:var(--text3)">¿Experimenta con apps y herramientas por iniciativa propia?</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:13px;border-left:3px solid var(--amber)">
+        <div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px">🤝 Influencia en el equipo</div>
+        <div style="font-size:11px;color:var(--text3)">Cuando esta persona adopta algo, ¿los demás tienden a seguirla?</div>
+      </div>
+      <div style="background:var(--bg3);border-radius:var(--r);padding:13px;border-left:3px solid var(--red)">
+        <div style="font-size:12px;font-weight:600;color:var(--white);margin-bottom:3px">📋 Carga repetitiva</div>
+        <div style="font-size:11px;color:var(--text3)">¿Cuánto de su día son tareas que podrían automatizarse?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-primary" onclick="startSetup()">Iniciar sesión →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 2 · EVALUACIÓN EQUIPO (el líder)
+════════════════════════════════════════════ -->
+<div class="page" id="page2">
+  <div class="chris-note">
+    <span>🎬</span>
+    <span><strong>Christian:</strong> entrega el laptop al líder. Explica que le tomará 5 minutos. Tú observas — no lo interrumpas.</span>
+  </div>
+
+  <div class="section-tag">👋 Para el líder</div>
+  <h1 class="page-title">Calificate a tu equipo<br><span>en 4 aspectos</span></h1>
+  <p class="page-sub">Del 1 al 5. No hay respuestas correctas — solo tu perspectiva. Esto es confidencial y nos ayuda a diseñar el mejor punto de entrada para tu área.</p>
+
+  <div id="personCards"></div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goTo(1)">← Volver</button>
+    <button class="btn btn-primary" onclick="goToLeaderEval()">Continuar →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 2B · EVALUACIÓN LÍDER (Christian)
+════════════════════════════════════════════ -->
+<div class="page" id="page2b">
+  <div class="chris-note">
+    <span>🔒</span>
+    <span><strong>Solo Christian:</strong> esta pantalla no la ve el líder. Marca lo que observaste durante los primeros minutos.</span>
+  </div>
+
+  <div class="section-tag">🔍 Evaluación del líder · Christian</div>
+  <h1 class="page-title">¿Qué tipo de líder<br><span>tienes enfrente?</span></h1>
+  <p class="page-sub">Marca las señales que observaste. Esto define cómo vas a manejar la sesión y cuánto apoyo vas a necesitar de arriba.</p>
+
+  <div class="card">
+    <div style="font-size:13px;font-weight:600;color:var(--teal-mid);margin-bottom:14px">✅ Señales positivas — líder facilitador</div>
+    <div id="posSignals">
+      <div class="signal-row" data-type="pos" data-key="habla_problemas">
+        <div class="signal-check" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Habla de problemas concretos con frustración genuina<span class="signal-tag tag-pos">facilitador</span></div>
+          <div class="signal-desc">Menciona cosas que le duelen del día a día sin que le preguntes</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="pos" data-key="pregunta_como">
+        <div class="signal-check" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Pregunta cómo funcionaría la IA en su proceso<span class="signal-tag tag-pos">curioso</span></div>
+          <div class="signal-desc">Tiene iniciativa para entender, no solo escucha pasivamente</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="pos" data-key="menciona_equipo">
+        <div class="signal-check" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Menciona personas del equipo que ya usan algo de tecnología<span class="signal-tag tag-pos">aliado</span></div>
+          <div class="signal-desc">Señal de que conoce a su equipo y hay potencial latente</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="pos" data-key="propone_ideas">
+        <div class="signal-check" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Propone ideas o casos de uso por su cuenta<span class="signal-tag tag-pos">activo</span></div>
+          <div class="signal-desc">Va más allá de responder — construye con la conversación</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="pos" data-key="acepta_piloto">
+        <div class="signal-check" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Acepta fácilmente el piloto de 5 días<span class="signal-tag tag-pos">comprometido</span></div>
+          <div class="signal-desc">No pone objeciones mayores a probar algo esta semana</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <div style="font-size:13px;font-weight:600;color:var(--amber-mid);margin-bottom:14px">⚠️ Señales de alerta — líder pasivo o resistente</div>
+    <div id="negSignals">
+      <div class="signal-row" data-type="neg" data-key="respuestas_vagas">
+        <div class="signal-check negative" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Respuestas vagas — "todo funciona bien", "no tenemos problemas"<span class="signal-tag tag-neg">pasivo</span></div>
+          <div class="signal-desc">Evita señalar fricciones reales. Posible miedo a exposición</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="neg" data-key="mira_equipo">
+        <div class="signal-check negative" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Mira constantemente al equipo antes de responder<span class="signal-tag tag-neg">inseguro</span></div>
+          <div class="signal-desc">No tiene autoridad clara o teme la reacción de su gente</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="neg" data-key="deriva_a_otros">
+        <div class="signal-check negative" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Desvía preguntas a otras áreas — "eso lo decide sistemas"<span class="signal-tag tag-neg">bloqueador</span></div>
+          <div class="signal-desc">Señal de que no va a impulsar el cambio desde su posición</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="neg" data-key="duda_piloto">
+        <div class="signal-check negative" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Pone objeciones al piloto — "mejor esperemos", "hay que consultarlo"<span class="signal-tag tag-neg">resistente</span></div>
+          <div class="signal-desc">No va a mover a su equipo sin presión externa</div>
+        </div>
+      </div>
+      <div class="signal-row" data-type="neg" data-key="celular">
+        <div class="signal-check negative" onclick="toggleSignal(this)"></div>
+        <div class="signal-body">
+          <div class="signal-title">Revisa el celular o se distrae frecuentemente<span class="signal-tag tag-neg">desenganchado</span></div>
+          <div class="signal-desc">La sesión no es prioridad para esta persona hoy</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:14px">
+    <label>Nota privada sobre el líder (solo tú la ves)</label>
+    <input type="text" id="leaderNote" placeholder="Ej: muy abierto, mencionar a Baudoin si hay resistencia..."/>
+  </div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goTo(2)">← Volver</button>
+    <button class="btn btn-primary" onclick="startCompetition()">Arrancar la competencia →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 3 · COMPETENCIA
+════════════════════════════════════════════ -->
+<div class="page" id="page3">
+  <div class="chris-note">
+    <span>🎮</span>
+    <span><strong>Christian dice al equipo:</strong> "Vamos a hacer algo diferente. El equipo se divide en dos grupos: <strong id="comp1Name">Equipo A</strong> y <strong id="comp2Name">Equipo B</strong>. Tienen 10 minutos para encontrar la mayor cantidad de tareas repetitivas, procesos manuales, dificultades e ideas de mejora del área. ¡El equipo que más encuentre gana!"</span>
+  </div>
+
+  <!-- Encabezado equipos -->
+  <div class="competition-header">
+    <div class="competitor-card champion" id="comp1Card">
+      <div class="comp-avatar" id="comp1Av" style="background:linear-gradient(135deg,#534AB7,#7B74D6)">A</div>
+      <div class="comp-name" id="comp1NameDisp">Equipo A</div>
+      <div style="font-size:11px;color:var(--purple-mid);margin:6px 0 8px;line-height:1.5" id="comp1Members">—</div>
+      <div class="comp-score-tag">🌟 Lidera: Champion #1</div>
+    </div>
+    <div class="vs-badge">VS</div>
+    <div class="competitor-card" id="comp2Card">
+      <div class="comp-avatar" id="comp2Av" style="background:linear-gradient(135deg,#0F6E56,#5DCAA5)">B</div>
+      <div class="comp-name" id="comp2NameDisp">Equipo B</div>
+      <div style="font-size:11px;color:var(--teal-mid);margin:6px 0 8px;line-height:1.5" id="comp2Members">—</div>
+      <div class="comp-score-tag" style="background:var(--teal-light);color:var(--teal)">🌱 Lidera: Champion #2</div>
+    </div>
+  </div>
+
+  <!-- Marcador -->
+  <div class="scoreboard">
+    <div class="score-side">
+      <div class="score-num" id="pts1" style="color:var(--purple-mid)">0</div>
+      <div class="score-name" id="pts1Name">—</div>
+    </div>
+    <div class="score-vs">pts</div>
+    <div class="leader-pts">
+      <strong id="leaderBonus">0</strong>
+      puntos del equipo
+      <div style="font-size:10px;color:var(--text3);margin-top:2px">El resto del equipo también suma</div>
+    </div>
+    <div class="score-vs">pts</div>
+    <div class="score-side">
+      <div class="score-num" id="pts2" style="color:var(--teal-mid)">0</div>
+      <div class="score-name" id="pts2Name">—</div>
+    </div>
+  </div>
+
+  <!-- Tabs de categorías -->
+  <div class="cat-tabs">
+    <div class="cat-tab active" onclick="setCat('repetitivas',this)">🔁 Repetitivas</div>
+    <div class="cat-tab" onclick="setCat('manuales',this)">🖐 Manuales</div>
+    <div class="cat-tab" onclick="setCat('dificultades',this)">😤 Dificultades</div>
+    <div class="cat-tab" onclick="setCat('ideas',this)">💡 Ideas de mejora</div>
+  </div>
+
+  <!-- Columnas -->
+  <div class="comp-columns">
+    <!-- Equipo A -->
+    <div class="comp-col">
+      <div class="comp-col-header">
+        <div class="comp-col-avatar" id="col1Av" style="background:linear-gradient(135deg,#534AB7,#7B74D6)">A</div>
+        <div>
+          <div class="comp-col-name" id="col1Name">Equipo A</div>
+          <div style="font-size:10px;color:var(--text3)" id="col1Leader">Champion #1</div>
+        </div>
+        <div class="comp-col-pts" id="col1Pts">0 pts</div>
+      </div>
+      <div class="task-input-row">
+        <input type="text" id="input1" placeholder="Escribe una tarea..." onkeydown="if(event.key==='Enter')addTask(1)"/>
+        <button class="add-task-btn" onclick="addTask(1)">+ Agregar</button>
+      </div>
+      <div class="task-list" id="list1"></div>
+    </div>
+    <!-- Equipo B -->
+    <div class="comp-col">
+      <div class="comp-col-header">
+        <div class="comp-col-avatar" id="col2Av" style="background:linear-gradient(135deg,#0F6E56,#5DCAA5)">B</div>
+        <div>
+          <div class="comp-col-name" id="col2Name">Equipo B</div>
+          <div style="font-size:10px;color:var(--text3)" id="col2Leader">Champion #2</div>
+        </div>
+        <div class="comp-col-pts" id="col2Pts">0 pts</div>
+      </div>
+      <div class="task-input-row">
+        <input type="text" id="input2" placeholder="Escribe una tarea..." onkeydown="if(event.key==='Enter')addTask(2)"/>
+        <button class="add-task-btn" onclick="addTask(2)">+ Agregar</button>
+      </div>
+      <div class="task-list" id="list2"></div>
+    </div>
+  </div>
+
+  <div class="btn-group" style="margin-top:24px">
+    <button class="btn btn-secondary" onclick="goTo('2b')">← Volver</button>
+    <button class="btn btn-primary" onclick="buildResults()">Ver resultados finales →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     FASE 4 · RESULTADOS
+════════════════════════════════════════════ -->
+<div class="page" id="page4">
+  <div class="section-tag">✅ Sesión completa</div>
+  <h1 class="page-title">Resultados de<br><span id="resultsArea">la sesión</span></h1>
+  <p class="page-sub" id="resultsSub">Diagnóstico completo del área.</p>
+
+  <div class="result-grid">
+
+    <!-- Champions -->
+    <div class="result-card highlight">
+      <div class="rc-title">🌟 AI Champions identificados</div>
+      <div id="championsResult"></div>
+    </div>
+
+    <!-- Mapa del equipo -->
+    <div class="result-card">
+      <div class="rc-title">📍 Mapa del equipo</div>
+      <div class="mini-quad">
+        <div class="mq mq-champion"><div class="mq-label">Adoptan primero</div><div class="mq-names" id="mq1"></div></div>
+        <div class="mq mq-latent"><div class="mq-label">Curiosos</div><div class="mq-names" id="mq2"></div></div>
+        <div class="mq mq-resistant"><div class="mq-label">Escépticos</div><div class="mq-names" id="mq3"></div></div>
+        <div class="mq mq-neutral"><div class="mq-label">Siguen al grupo</div><div class="mq-names" id="mq4"></div></div>
+      </div>
+    </div>
+
+    <!-- Perfil del líder -->
+    <div class="result-card">
+      <div class="rc-title">👤 Perfil del líder · privado</div>
+      <div id="leaderProfileResult"></div>
+    </div>
+
+    <!-- Tareas encontradas -->
+    <div class="result-card">
+      <div class="rc-title">📋 Tareas levantadas en la sesión</div>
+      <div id="tasksResult"></div>
+    </div>
+
+  </div>
+
+  <!-- Quick wins priorizados -->
+  <div class="result-card" style="margin-bottom:14px">
+    <div class="rc-title" style="margin-bottom:14px">⚡ Quick wins priorizados para esta área</div>
+    <div class="qw-list" id="quickWinsResult"></div>
+  </div>
+
+  <!-- Insights y plan -->
+  <div class="insight-box" id="insightBox"></div>
+
+  <div class="btn-group">
+    <button class="btn btn-secondary" onclick="goTo(3)">← Ajustar</button>
+    <button class="btn btn-secondary" onclick="window.print()">Imprimir</button>
+    <button class="btn btn-primary" onclick="resetAll()">Nueva sesión →</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ── ESTADO ──────────────────────────────────────────────────────────
+const S = {
+  area:'', leader:'',
+  members:[],
+  scores:{},       // {name:{apertura,curiosidad,influencia,carga}}
+  signals:{pos:{}, neg:{}},
+  leaderNote:'',
+  tasks:{1:{repetitivas:[],manuales:[],dificultades:[],ideas:[]},
+         2:{repetitivas:[],manuales:[],dificultades:[],ideas:[]}},
+  currentCat:'repetitivas',
+  champions:[]     // [name1, name2] — top 2
+};
+
+// ── COLORES ──────────────────────────────────────────────────────────
+const GRAD = [
+  '#534AB7,#7B74D6','#0F6E56,#5DCAA5','#BA7517,#EF9F27',
+  '#A32D2D,#E24B4A','#3C3489,#534AB7','#085041,#0F6E56'];
+const grad = i => GRAD[i%GRAD.length];
+
+function initials(name) {
+  return (name||'?').split(' ').map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'?';
+}
+
+// ── NAVEGACIÓN ───────────────────────────────────────────────────────
+function goTo(n) {
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page'+n).classList.add('active');
+  ['1','2','2b','3','4'].forEach((k,i)=>{
+    const el = document.getElementById('ph'+(i+1<5?i+1:4));
+    if(!el) return;
+    const order = {'1':1,'2':2,'2b':2,'3':3,'4':4};
+    const cur   = order[String(n)];
+    const pos   = i+1;
+    el.className = 'phase ' + (pos<cur?'done':pos===cur?'active':'pending');
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function safeGo(n) {
+  if(S.members.length===0 && n>1) return;
+  goTo(n);
+}
+
+// ── SETUP ────────────────────────────────────────────────────────────
+function rm(btn) {
+  const rows = document.querySelectorAll('#memberInputs .member-row');
+  if(rows.length<=1) return;
+  btn.closest('.member-row').remove();
+}
+function addMember() {
+  const c = document.getElementById('memberInputs');
+  const n = c.querySelectorAll('.member-row').length+1;
+  const d = document.createElement('div');
+  d.className='member-row';
+  d.innerHTML=`<input type="text" class="member-name" placeholder="Integrante ${n}"/>
+    <button class="rm-btn" onclick="rm(this)">×</button>`;
+  c.appendChild(d);
+  d.querySelector('input').focus();
+}
+
+function startSetup() {
+  S.area   = document.getElementById('areaName').value.trim() || 'Área';
+  S.leader = document.getElementById('leaderName').value.trim() || 'Líder';
+  S.members = [...document.querySelectorAll('.member-name')]
+    .map(i=>i.value.trim()).filter(Boolean);
+  if(!S.members.length){alert('Agrega al menos un integrante.');return;}
+  S.scores={};
+  S.members.forEach(m=>{S.scores[m]={apertura:3,curiosidad:3,influencia:3,carga:3};});
+  document.getElementById('headerSub').textContent = `${S.area} · Líder: ${S.leader}`;
+  renderPersonCards();
+  goTo(2);
+}
+
+// ── EVALUACIÓN EQUIPO ────────────────────────────────────────────────
+const DIMS=[
+  {key:'apertura',   label:'Apertura al cambio',   color:'#534AB7', cls:''},
+  {key:'curiosidad', label:'Curiosidad tecnológica',color:'#0F6E56', cls:'teal'},
+  {key:'influencia', label:'Influencia en el equipo',color:'#BA7517',cls:'amber'},
+  {key:'carga',      label:'Carga repetitiva',      color:'#A32D2D', cls:'red'},
+];
+
+function renderPersonCards() {
+  const c = document.getElementById('personCards');
+  c.innerHTML='';
+  S.members.forEach((name,idx)=>{
+    const div=document.createElement('div');
+    div.className='card'; div.id='pc-'+idx;
+    div.style.marginBottom='12px';
+    const dimsH = DIMS.map(d=>`
+      <div class="slider-box">
+        <div class="sl-header">
+          <span class="sl-label"><span class="sl-dot" style="background:${d.color}"></span>${d.label}</span>
+          <span class="sl-val" id="sv-${idx}-${d.key}" style="color:${d.color}">3</span>
+        </div>
+        <input type="range" min="1" max="5" value="3" class="${d.cls}"
+          style="--tc:${d.color}"
+          oninput="updScore(${idx},'${d.key}',this.value)"
+          onchange="updScore(${idx},'${d.key}',this.value)"/>
+        <div class="sl-marks"><span>1 Bajo</span><span>3 Medio</span><span>5 Alto</span></div>
+      </div>`).join('');
+    div.innerHTML=`
+      <div class="person-header-row">
+        <div class="avatar" style="background:linear-gradient(135deg,${grad(idx)})">${initials(name)}</div>
+        <input class="p-name-input" value="${name}" onchange="renameM(${idx},this.value)"/>
+        <span class="done-tag">✓ Listo</span>
+      </div>
+      <div class="slider-grid">${dimsH}</div>
+      <div class="total-row">
+        <span class="total-lbl">Total</span>
+        <div class="total-track"><div class="total-fill" id="tf-${idx}" style="width:60%"></div></div>
+        <span class="total-num" id="tn-${idx}">12<span style="font-size:10px;color:var(--text3)">/20</span></span>
+      </div>`;
+    c.appendChild(div);
+  });
+  // fix slider thumb colors
+  document.querySelectorAll('input[type=range]').forEach(r=>{
+    r.style.setProperty('--tc',r.style.getPropertyValue('--tc')||'#534AB7');
+  });
+}
+
+function updScore(idx,dim,val){
+  const name=S.members[idx];
+  S.scores[name][dim]=parseInt(val);
+  document.getElementById(`sv-${idx}-${dim}`).textContent=val;
+  const s=S.scores[name];
+  const tot=s.apertura+s.curiosidad+s.influencia+s.carga;
+  document.getElementById(`tn-${idx}`).innerHTML=`${tot}<span style="font-size:10px;color:var(--text3)">/20</span>`;
+  document.getElementById(`tf-${idx}`).style.width=(tot/20*100)+'%';
+  const moved=Object.values(s).some(v=>v!==3);
+  document.getElementById('pc-'+idx).classList.toggle('completed',moved);
+}
+
+function renameM(idx,val){
+  const old=S.members[idx];
+  if(S.scores[old]){S.scores[val]=S.scores[old];delete S.scores[old];}
+  S.members[idx]=val;
+}
+
+function goToLeaderEval(){
+  // Calcular champions antes
+  S.champions = computeChampions();
+  goTo('2b');
+}
+
+// ── CLASIFICACIÓN ────────────────────────────────────────────────────
+function champScore(s){return s.apertura*1.5+s.curiosidad*1.5+s.influencia+s.carga;}
+
+function classify(s){
+  const ho=s.apertura>=4, hc=s.curiosidad>=4, hi=s.influencia>=4;
+  if((ho||hc)&&hi) return 'champion';
+  if((ho||hc)&&!hi) return 'latent';
+  if(!ho&&!hc&&hi) return 'resistant';
+  return 'neutral';
+}
+
+function computeChampions(){
+  return [...S.members]
+    .sort((a,b)=>champScore(S.scores[b])-champScore(S.scores[a]))
+    .slice(0,2);
+}
+
+// ── EVALUACIÓN LÍDER ────────────────────────────────────────────────
+function toggleSignal(el){
+  el.classList.toggle('checked');
+  const row=el.closest('.signal-row');
+  const type=row.dataset.type, key=row.dataset.key;
+  if(!S.signals[type]) S.signals[type]={};
+  S.signals[type][key]=el.classList.contains('checked');
+}
+
+function startCompetition(){
+  S.leaderNote=document.getElementById('leaderNote').value;
+  S.champions=computeChampions();
+  const [c1,c2]=S.champions;
+
+  // Dividir el equipo en dos grupos
+  // Champions lideran cada equipo, el resto se distribuye alternado por ranking
+  const ranked=[...S.members].sort((a,b)=>champScore(S.scores[b])-champScore(S.scores[a]));
+  const team1=[c1], team2=[c2||ranked[1]];
+  ranked.forEach((m,i)=>{
+    if(m===c1||m===c2) return;
+    if(team1.length<=team2.length) team1.push(m); else team2.push(m);
+  });
+  S.teams={1:team1, 2:team2};
+
+  const ini1=initials(c1||'A'), ini2=initials(c2||'B');
+  const g1=grad(S.members.indexOf(c1||S.members[0]));
+  const g2=grad(S.members.indexOf(c2||S.members[1]));
+
+  // Avatares e íconos
+  ['comp1Av','col1Av'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.textContent='A'; el.style.background=`linear-gradient(135deg,${g1})`;
+  });
+  ['comp2Av','col2Av'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.textContent='B'; el.style.background=`linear-gradient(135deg,${g2})`;
+  });
+
+  // Nombres equipos
+  document.getElementById('comp1Name').textContent='Equipo A';
+  document.getElementById('comp2Name').textContent='Equipo B';
+  document.getElementById('comp1NameDisp').textContent='Equipo A';
+  document.getElementById('comp2NameDisp').textContent='Equipo B';
+  document.getElementById('col1Name').textContent='Equipo A';
+  document.getElementById('col2Name').textContent='Equipo B';
+  document.getElementById('pts1Name').textContent='Equipo A';
+  document.getElementById('pts2Name').textContent='Equipo B';
+
+  // Miembros de cada equipo
+  document.getElementById('comp1Members').textContent=team1.join(' · ');
+  document.getElementById('comp2Members').textContent=team2.join(' · ');
+  document.getElementById('col1Leader').textContent=`Líder: ${c1||'Champion 1'}`;
+  document.getElementById('col2Leader').textContent=`Líder: ${c2||'Champion 2'}`;
+
+  goTo(3);
+}
+
+// ── COMPETENCIA ──────────────────────────────────────────────────────
+function setCat(cat, el){
+  S.currentCat=cat;
+  document.querySelectorAll('.cat-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  // Vaciar inputs
+  document.getElementById('input1').value='';
+  document.getElementById('input2').value='';
+}
+
+const CAT_PTS={repetitivas:3, manuales:2, dificultades:2, ideas:3};
+const CAT_LABELS={repetitivas:'Repetitiva',manuales:'Manual',dificultades:'Dificultad',ideas:'Idea'};
+
+function addTask(player){
+  const input=document.getElementById('input'+player);
+  const text=input.value.trim();
+  if(!text) return;
+  const cat=S.currentCat;
+  S.tasks[player][cat].push(text);
+  input.value='';
+
+  const list=document.getElementById('list'+player);
+  const pts=CAT_PTS[cat];
+  const item=document.createElement('div');
+  item.className='task-item';
+  item.innerHTML=`
+    <div class="task-text"><strong style="font-size:10px;color:var(--text3)">[${CAT_LABELS[cat]}]</strong> ${text}</div>
+    <span class="task-pts">+${pts}</span>
+    <button class="task-rm" onclick="removeTask(${player},'${cat}',${S.tasks[player][cat].length-1},this)">×</button>`;
+  list.appendChild(item);
+  updateScores();
+  input.focus();
+}
+
+function removeTask(player, cat, idx, btn){
+  S.tasks[player][cat].splice(idx,1);
+  btn.closest('.task-item').remove();
+  updateScores();
+}
+
+function totalPts(player){
+  let t=0;
+  Object.entries(S.tasks[player]).forEach(([cat,arr])=>{t+=arr.length*CAT_PTS[cat];});
+  return t;
+}
+
+function updateScores(){
+  const p1=totalPts(1), p2=totalPts(2);
+  document.getElementById('pts1').textContent=p1;
+  document.getElementById('pts2').textContent=p2;
+  document.getElementById('col1Pts').textContent=p1+' pts';
+  document.getElementById('col2Pts').textContent=p2+' pts';
+  // Leader bonus = todos los que el equipo agregó (restante)
+  const total=p1+p2;
+  document.getElementById('leaderBonus').textContent=total;
+}
+
+// ── RESULTADOS ───────────────────────────────────────────────────────
+function buildResults(){
+  const champions=S.champions;
+  const [c1,c2]=champions;
+
+  // Título
+  document.getElementById('resultsArea').textContent=S.area;
+  document.getElementById('resultsSub').textContent=
+    `Líder: ${S.leader} · ${S.members.length} personas · ${new Date().toLocaleDateString('es-CO')}`;
+
+  // Champions
+  const cr=document.getElementById('championsResult');
+  cr.innerHTML=champions.map((name,i)=>{
+    const s=S.scores[name]||{apertura:3,curiosidad:3,influencia:3,carga:3};
+    const tot=Object.values(s).reduce((a,b)=>a+b,0);
+    return `<div class="champion-chip">
+      <div class="champ-avatar" style="background:linear-gradient(135deg,${grad(S.members.indexOf(name))})">${initials(name)}</div>
+      <div class="champ-info">
+        <div class="champ-name">${name}</div>
+        <div class="champ-role">Champion #${i+1} · Arranca el piloto</div>
+      </div>
+      <div class="champ-score">${tot}/20</div>
+    </div>`;
+  }).join('');
+
+  // Mini mapa
+  const classified=S.members.map(n=>({name:n,cat:classify(S.scores[n]||{})}));
+  document.getElementById('mq1').textContent=classified.filter(p=>p.cat==='champion').map(p=>p.name).join(', ')||'—';
+  document.getElementById('mq2').textContent=classified.filter(p=>p.cat==='latent').map(p=>p.name).join(', ')||'—';
+  document.getElementById('mq3').textContent=classified.filter(p=>p.cat==='resistant').map(p=>p.name).join(', ')||'—';
+  document.getElementById('mq4').textContent=classified.filter(p=>p.cat==='neutral').map(p=>p.name).join(', ')||'—';
+
+  // Perfil líder
+  const pos=Object.values(S.signals.pos||{}).filter(Boolean).length;
+  const neg=Object.values(S.signals.neg||{}).filter(Boolean).length;
+  const profile=pos>=3?{label:'Facilitador activo',tag:'tag-green',icon:'🟢',
+    desc:'Líder que va a empujar el cambio. Apóyate en él para el anuncio al equipo.',
+    action:'Pídele que presente los resultados del piloto él mismo.'}
+    :pos>=1&&neg<=1?{label:'Neutral — necesita dirección',tag:'tag-amber',icon:'🟡',
+    desc:'Abierto pero no iniciará por su cuenta. Necesita pasos muy concretos.',
+    action:'Mándalo a que hable con Baudoin si hay bloqueos.'}
+    :{label:'Pasivo o resistente',tag:'tag-red',icon:'🔴',
+    desc:'Riesgo alto de que bloquee la adopción en su área.',
+    action:'Necesitas el mandato de Baudoin antes de la siguiente sesión con este equipo.'};
+
+  document.getElementById('leaderProfileResult').innerHTML=`
+    <div class="leader-profile">
+      <div class="lp-row">
+        <span class="lp-icon">${profile.icon}</span>
+        <span class="lp-label"><strong>${S.leader}</strong></span>
+        <span class="lp-tag ${profile.tag}">${profile.label}</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-icon">✅</span>
+        <span class="lp-label">Señales positivas: <strong>${pos}</strong> de 5</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-icon">⚠️</span>
+        <span class="lp-label">Señales de alerta: <strong>${neg}</strong> de 5</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-icon">💡</span>
+        <span class="lp-label">${profile.desc}</span>
+      </div>
+      <div class="lp-row">
+        <span class="lp-icon">🎯</span>
+        <span class="lp-label" style="color:var(--purple-mid)"><strong>Acción:</strong> ${profile.action}</span>
+      </div>
+      ${S.leaderNote?`<div class="lp-row"><span class="lp-icon">📝</span><span class="lp-label" style="color:var(--amber-mid)">${S.leaderNote}</span></div>`:''}
+    </div>`;
+
+  // Tareas encontradas
+  const allTasks=[];
+  [1,2].forEach(p=>{
+    Object.entries(S.tasks[p]).forEach(([cat,arr])=>{
+      arr.forEach(t=>allTasks.push({text:t,cat,player:p,pts:CAT_PTS[cat]}));
+    });
+  });
+  const tr=document.getElementById('tasksResult');
+  if(allTasks.length===0){
+    tr.innerHTML='<div style="font-size:12px;color:var(--text3);font-style:italic">No se registraron tareas todavía.</div>';
+  } else {
+    const sorted=allTasks.sort((a,b)=>b.pts-a.pts);
+    tr.innerHTML=sorted.slice(0,8).map(t=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border)">
+        <span style="font-size:10px;background:var(--bg3);color:var(--text3);padding:2px 7px;border-radius:6px;white-space:nowrap">${CAT_LABELS[t.cat]}</span>
+        <span style="font-size:12px;color:var(--text);flex:1">${t.text}</span>
+        <span style="font-size:11px;color:var(--purple-mid);font-family:var(--mono)">+${t.pts}</span>
+      </div>`).join('')+
+    (sorted.length>8?`<div style="font-size:11px;color:var(--text3);margin-top:6px">+${sorted.length-8} más registradas</div>`:'');
+  }
+
+  // Quick wins priorizados — basados en las tareas de mayor puntaje + conocimiento previo
+  const reps=[...S.tasks[1].repetitivas,...S.tasks[2].repetitivas];
+  const mans=[...S.tasks[1].manuales,...S.tasks[2].manuales];
+  const qws=[];
+  if(reps.length>0){
+    qws.push({day:'Día 1–3',color:'',text:`<strong>Respuesta asistida por IA:</strong> "${reps[0]}" → construir prompt que resuelva este caso en segundos.`});
+  }
+  if(mans.length>0){
+    qws.push({day:'Día 2–4',color:'teal',text:`<strong>Automatización de tarea manual:</strong> "${mans[0]}" → herramienta que elimina los pasos repetitivos.`});
+  }
+  if(champions.length>0){
+    qws.push({day:'Día 5',color:'amber',text:`<strong>Piloto con ${champions[0]}:</strong> medir tiempo ahorrado y compartir en #refacil-ia-wins.`});
+  }
+  qws.push({day:'Día 7',color:'',text:`<strong>Sesión de ajuste:</strong> revisar feedback con ${S.leader} y definir la siguiente apuesta.`});
+  document.getElementById('quickWinsResult').innerHTML=
+    qws.map(q=>`<div class="qw-item ${q.color}">
+      <span class="qw-day ${q.color}">${q.day}</span>
+      <span class="qw-text">${q.text}</span>
+    </div>`).join('');
+
+  // Insights
+  const totalTasks=allTasks.length;
+  const winnerPts=Math.max(totalPts(1),totalPts(2));
+  const winner=totalPts(1)>=totalPts(2)?S.champions[0]:S.champions[1];
+  const insights=[];
+  if(totalTasks>0){
+    insights.push({icon:'📊',cls:'',text:`El equipo identificó <strong>${totalTasks} oportunidades</strong> en la sesión. Las más repetidas en la categoría de mayor impacto definen el quick win de esta semana.`});
+  }
+  if(champions.length>0){
+    insights.push({icon:'🌟',cls:'teal',text:`<strong>${champions[0]}</strong> es el Champion #1. Arranca el piloto con esta persona mañana — no la semana que viene.`});
+  }
+  if(profile.label==='Pasivo o resistente'){
+    insights.push({icon:'⚡',cls:'amber',text:`El líder <strong>${S.leader}</strong> muestra señales de pasividad. Antes de la siguiente sesión con este equipo, asegúrate de que Baudoin haya dado el mandato público.`});
+  } else {
+    insights.push({icon:'🤝',cls:'',text:`${S.leader} tiene perfil de <strong>${profile.label.toLowerCase()}</strong>. Pídele que presente los resultados del piloto a su equipo — eso consolida su rol como aliado.`});
+  }
+  document.getElementById('insightBox').innerHTML=`
+    <h3>📌 Plan para ${S.area}</h3>
+    <div class="insight-items">
+      ${insights.map(i=>`<div class="ins ${i.cls}"><span class="ins-icon">${i.icon}</span><span class="ins-text">${i.text}</span></div>`).join('')}
+    </div>`;
+
+  goTo(4);
+}
+
+// ── RESET ────────────────────────────────────────────────────────────
+function resetAll(){
+  Object.assign(S,{area:'',leader:'',members:[],scores:{},
+    signals:{pos:{},neg:{}},leaderNote:'',
+    tasks:{1:{repetitivas:[],manuales:[],dificultades:[],ideas:[]},
+           2:{repetitivas:[],manuales:[],dificultades:[],ideas:[]}},
+    currentCat:'repetitivas',champions:[]});
+  document.getElementById('areaName').value='';
+  document.getElementById('leaderName').value='';
+  document.getElementById('leaderNote').value='';
+  const mi=document.getElementById('memberInputs');
+  mi.innerHTML=`
+    <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 1"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+    <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 2"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+    <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 3"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+    <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 4"/><button class="rm-btn" onclick="rm(this)">×</button></div>
+    <div class="member-row"><input type="text" class="member-name" placeholder="Integrante 5"/><button class="rm-btn" onclick="rm(this)">×</button></div>`;
+  document.querySelectorAll('.signal-check').forEach(c=>c.classList.remove('checked'));
+  document.querySelectorAll('.task-list').forEach(l=>l.innerHTML='');
+  ['pts1','pts2','col1Pts','col2Pts','leaderBonus'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.textContent=id.includes('Pts')?'0 pts':'0';
+  });
+  document.getElementById('headerSub').textContent='Configura el área para comenzar';
+  goTo(1);
+}
+</script>
+</body>
+</html>

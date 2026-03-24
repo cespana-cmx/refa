@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum AssessmentStatus {
+  DRAFT
+  COMPLETED
+}
+
+model User {
+  id               String            @id @default(cuid())
+  name             String
+  email            String            @unique
+  passwordHash     String
+  role             Role              @default(USER)
+  areaName         String?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+  assessments      Assessment[]
+  teamMembers      TeamMember[]
+  leaderDiagnostic LeaderDiagnostic?
+
+  @@map("users")
+}
+
+model Assessment {
+  id             String           @id @default(cuid())
+  userId         String
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status         AssessmentStatus @default(DRAFT)
+  score          Float?
+  categoryScores Json?
+  completedAt    DateTime?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  responses      Response[]
+
+  @@map("assessments")
+}
+
+model Response {
+  id           String     @id @default(cuid())
+  assessmentId String
+  assessment   Assessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+  questionId   Int
+  value        Int
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+
+  @@unique([assessmentId, questionId])
+  @@map("responses")
+}
+
+// Integrantes del equipo que el líder registra
+model TeamMember {
+  id         String          @id @default(cuid())
+  userId     String
+  user       User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name       String
+  createdAt  DateTime        @default(now())
+  evaluation TeamEvaluation?
+
+  @@map("team_members")
+}
+
+// Evaluación que el líder hace de cada integrante (4 dimensiones)
+model TeamEvaluation {
+  id         String     @id @default(cuid())
+  memberId   String     @unique
+  member     TeamMember @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  apertura   Int        // 1-5: Apertura al cambio
+  curiosidad Int        // 1-5: Curiosidad tecnológica
+  influencia Int        // 1-5: Influencia en el equipo
+  carga      Int        // 1-5: Carga de tareas repetitivas
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+
+  @@map("team_evaluations")
+}
+
+// Diagnóstico privado de Christian sobre el líder
+model LeaderDiagnostic {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  positiveSignals Json     @default("[]") // string[] of signal keys
+  negativeSignals Json     @default("[]") // string[] of signal keys
+  profileType     String?  // "facilitador" | "resistente" | "neutral"
+  note            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@map("leader_diagnostics")
+}
