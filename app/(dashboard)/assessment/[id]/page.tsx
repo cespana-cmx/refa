@@ -227,13 +227,13 @@ export default function AssessmentPage() {
                     ? `${cat.color}25`
                     : catComplete
                     ? 'rgba(93, 202, 165, 0.1)'
-                    : 'rgba(30, 26, 56, 0.5)',
+                    : 'var(--bg3)',
                   border: isCurrent
                     ? `1px solid ${cat.color}50`
                     : catComplete
                     ? '1px solid rgba(93, 202, 165, 0.3)'
-                    : '1px solid rgba(83, 74, 183, 0.1)',
-                  color: isCurrent ? cat.color : catComplete ? '#5DCAA5' : '#9994CC',
+                    : '1px solid var(--border)',
+                  color: isCurrent ? cat.color : catComplete ? 'var(--teal-mid)' : 'var(--text-secondary)',
                 }}
               >
                 {catComplete && !isCurrent && (
@@ -288,10 +288,10 @@ export default function AssessmentPage() {
               key={question.id}
               className="rounded-xl p-5 animate-slide-up"
               style={{
-                background: 'rgba(22, 19, 42, 0.8)',
+                background: 'var(--bg2)',
                 border: selectedValue
                   ? `1px solid ${currentCat.color}30`
-                  : '1px solid rgba(30, 26, 56, 0.8)',
+                  : '1px solid var(--border)',
                 animationDelay: `${qIdx * 0.05}s`,
               }}
             >
@@ -299,9 +299,9 @@ export default function AssessmentPage() {
                 <span
                   className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 mt-0.5"
                   style={{
-                    background: selectedValue ? `${currentCat.color}25` : 'rgba(83, 74, 183, 0.1)',
-                    color: selectedValue ? currentCat.color : '#9994CC',
-                    border: selectedValue ? `1px solid ${currentCat.color}40` : '1px solid rgba(83, 74, 183, 0.2)',
+                    background: selectedValue ? `${currentCat.color}25` : 'var(--bg3)',
+                    color: selectedValue ? currentCat.color : 'var(--text-secondary)',
+                    border: selectedValue ? `1px solid ${currentCat.color}40` : '1px solid var(--border)',
                   }}
                 >
                   {question.id}
@@ -331,12 +331,12 @@ export default function AssessmentPage() {
                     className={`radio-option flex-col text-center ${selectedValue === value ? 'selected' : ''}`}
                     style={{
                       borderColor: selectedValue === value ? currentCat.color : 'transparent',
-                      background: selectedValue === value ? `${currentCat.color}15` : 'rgba(30, 26, 56, 0.5)',
+                      background: selectedValue === value ? `${currentCat.color}15` : 'var(--bg3)',
                     }}
                   >
                     <span
                       className="text-xl font-bold mb-1"
-                      style={{ color: selectedValue === value ? currentCat.color : '#9994CC' }}
+                      style={{ color: selectedValue === value ? currentCat.color : 'var(--text-secondary)' }}
                     >
                       {value}
                     </span>
@@ -375,7 +375,7 @@ export default function AssessmentPage() {
           style={{
             background:
               !isCategoryComplete
-                ? '#3D3589'
+                ? 'var(--purple-dark)'
                 : currentCategory === CATEGORIES.length - 1
                 ? 'linear-gradient(135deg, #0F6E56 0%, #5DCAA5 100%)'
                 : 'linear-gradient(135deg, #534AB7 0%, #6B62CC 100%)',
