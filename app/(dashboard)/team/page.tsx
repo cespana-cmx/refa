@@ -228,7 +228,7 @@ export default function TeamPage() {
       {/* Add member */}
       <div
         className="rounded-xl p-4 mb-5"
-        style={{ background: 'rgba(22, 19, 42, 0.8)', border: '1px solid rgba(83, 74, 183, 0.15)' }}
+        style={{ background: 'var(--bg2)', border: '1px solid var(--border)' }}
       >
         <label className="block text-xs font-semibold uppercase tracking-widest text-text-secondary mb-3">
           Agregar integrante del equipo
@@ -256,7 +256,7 @@ export default function TeamPage() {
       {members.length === 0 ? (
         <div
           className="rounded-xl p-10 text-center"
-          style={{ background: 'rgba(22, 19, 42, 0.5)', border: '1px dashed rgba(83, 74, 183, 0.2)' }}
+          style={{ background: 'var(--bg2)', border: '1px dashed var(--border2)' }}
         >
           <div className="text-3xl mb-3">👥</div>
           <p className="text-text-secondary text-sm">Agrega a los integrantes de tu equipo para comenzar</p>
@@ -278,8 +278,8 @@ export default function TeamPage() {
                     ? '1px solid rgba(93, 202, 165, 0.25)'
                     : isExpanded
                     ? '1px solid rgba(83, 74, 183, 0.4)'
-                    : '1px solid rgba(30, 26, 56, 0.8)',
-                  background: 'rgba(22, 19, 42, 0.8)',
+                    : '1px solid var(--border)',
+                  background: 'var(--bg2)',
                 }}
               >
                 {/* Member header */}
@@ -326,7 +326,7 @@ export default function TeamPage() {
                     <button
                       onClick={(e) => { e.stopPropagation(); removeMember(member.id) }}
                       className="w-7 h-7 rounded-lg flex items-center justify-center text-text-secondary hover:text-red-400 transition-colors"
-                      style={{ background: 'rgba(30, 26, 56, 0.5)' }}
+                      style={{ background: 'var(--bg3)' }}
                     >
                       ×
                     </button>
@@ -341,13 +341,13 @@ export default function TeamPage() {
 
                 {/* Evaluation form */}
                 {isExpanded && (
-                  <div className="px-4 pb-4 pt-1 border-t" style={{ borderColor: 'rgba(83, 74, 183, 0.12)' }}>
+                  <div className="px-4 pb-4 pt-1 border-t" style={{ borderColor: 'var(--border)' }}>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
                       {DIMENSIONS.map((dim) => (
                         <div
                           key={dim.key}
                           className="rounded-xl p-3"
-                          style={{ background: 'rgba(14, 12, 30, 0.6)' }}
+                          style={{ background: 'var(--bg3)' }}
                         >
                           <div className="flex items-center justify-between mb-2">
                             <span className="text-xs font-semibold flex items-center gap-1.5" style={{ color: dim.color }}>
@@ -371,7 +371,7 @@ export default function TeamPage() {
                             }
                             className="w-full h-1.5 rounded-full outline-none cursor-pointer"
                             style={{
-                              background: `linear-gradient(to right, ${dim.color} 0%, ${dim.color} ${((memberScore[dim.key] - 1) / 4) * 100}%, rgba(30,26,56,0.8) ${((memberScore[dim.key] - 1) / 4) * 100}%)`,
+                              background: `linear-gradient(to right, ${dim.color} 0%, ${dim.color} ${((memberScore[dim.key] - 1) / 4) * 100}%, var(--bg1) ${((memberScore[dim.key] - 1) / 4) * 100}%)`,
                               accentColor: dim.color,
                             }}
                           />
